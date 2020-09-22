@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- displays site properly based on user's device -->
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin="" />
+  <!-- Make sure you put this AFTER Leaflet's CSS -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+
+
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+  <title>Frontend Mentor | IP Address Tracker</title>
+
+  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+  <style>
+
+    @import url("https://fonts.google.com/specimen/Rubik");
+
+    .attribution {
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .attribution a {
+      color: hsl(228, 45%, 44%);
+    }
+
+    body {
+      align-items: center;
+      align-content: center;
+      font-family:'Rubik', sans-serif;
+      font-size: 18px;
+      overflow-x: hidden;
+    }
+
+    .pattern {
+      background: url('images/pattern-bg.png');
+      width: 105%;
+      height: auto;
+      background-size: 100% 100%;
+      color: #fff;
+      border-color: black;
+      border-width: 20px;
+      font-weight: bolder;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-content: center;
+      top: -0.5rem;
+      left: -0.5rem;
+    }
+
+    .form-control {
+      border-top-left-radius: 20px;
+      border-bottom-left-radius: 20px;
+      height: 40px;
+      padding: 5px;
+      margin-right: 0;
+    }
+
+    .form {
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .form__label {
+      text-indent: -9999px;
+      font-size: 0;
+    }
+
+    .form__input {
+      width: 30rem;
+      height: 2rem;
+      padding: 0.75rem;
+      border-top-left-radius: 0.5rem;
+      border-bottom-left-radius: 0.5rem;
+      border: 0px transparent;
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .form__error {
+      margin: 0.5rem auto;
+      color: white;
+    }
+
+    .form__input::placeholder {
+      color: #969696;
+      font-size: 0.8rem;
+    }
+
+    .form__button {
+      position: absolute;
+      height: 3.5rem;
+      width: 2rem;
+      background-color: #2b2b2b;
+      background-image: url(images/icon-arrow.svg);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 0.5rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+      border: 0px transparent;
+      cursor: pointer;
+    }
+
+    .main {
+      display: flex;
+      justify-content: space-around;
+      position: relative;
+    }
+
+    .main__informations {
+      position: absolute;
+      width: 75%;
+      display: flex;
+      height: 6rem;
+      top: -5rem;
+      /*5rem from height/2 + 1 rem from padding*/
+      flex-direction: column;
+      background-color: white;
+      z-index: 2;
+      padding: 1rem 0.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 10px 5px 50px #2b2b2b;
+      flex-direction: row;
+    }
+
+    .information__block-content {
+      display: flex;
+      flex-direction: column;
+      float: right;
+      width: 25%;
+      border-right: 1px solid rgba(150, 150, 150, 0.5);
+      margin: 0 0.4rem;
+      text-align: left;
+    }
+
+    .information__block-content>h2 {
+      color: hsl(0, 0%, 59%);
+      font-size: 0.8rem;
+    }
+
+    .information__block-content>p {
+      color: hsl(0, 0%, 17%);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    #mapid {
+      height: 600px;
+      z-index: -1;
+    }
+    @media screen and (max-width:700px){
+
+      .form__input {
+      width: 13rem;
+      height: 2rem;
+      padding: 0.75rem;
+      border-top-left-radius: 0.5rem;
+      border-bottom-left-radius: 0.5rem;
+      border: 0px transparent;
+      font-family: 'Rubik', sans-serif;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    .main__informations {
+      position: absolute;
+      width: 20rem;
+      display: flex;
+      height: 14rem;
+      top: -5rem;
+      /*5rem from height/2 + 1 rem from padding*/
+      flex-direction: column;
+      background-color: white;
+      z-index: 2;
+      padding: 0rem 0rem;
+      border-radius: 0.5rem;
+      box-shadow: 10px 5px 50px #2b2b2b;
+    }
+    
+    .information__block-content {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      border-right: 0px solid rgba(150, 150, 150, 0.5);
+      border-bottom: 1px solid rgba(150, 150, 150, 0.5);
+      margin: 0 0;
+      height:auto;
+      text-align: center;
+    }
+
+    .information__block-content > h2 {
+      color: hsl(0, 0%, 59%);
+      line-height: 0;
+      font-size: 0.8rem;
+    }
+
+    .information__block-content > p {
+      color: hsl(0, 0%, 17%);
+      font-size: 1.1rem;
+      line-height: 0;
+      font-weight: 700;
+    }}
+  </style>
+</head>
+
+<body>
+  <section class="pattern">
+    <center>
+      <br>
+      <h2 style="line-height:0;">IP Address Tracker</h2>
+      <br><input class="form__input" type="text" placeholder="Search for any IP addess or domain" required
+        pattern="(^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$)|([www.]?.+\.com(\.[a-z]+)?)" id="ip">
+      <button class="form__button" onclick="searchIp()"><a></a></button><br><br><br><br><br>
+      <br><br>
+    </center>
+
+  </section>
+  <main class="main">
+    <div class="main__informations">
+
+      <div class="information__block-content">
+        <h2>IP ADDRESS</h2>
+        <p id="address">8.8.8.8</p>
+      </div>
+
+      <div class="information__block-content">
+        <h2>LOCATION</h2>
+        <p id="location">Mountain View, US, California</p>
+      </div>
+
+      <div class="information__block-content">
+        <h2>TIMEZONE</h2>
+        <p id="timezone">-07:00</p>
+      </div>
+
+      <div class="information__block-content">
+        <h2>ISP</h2>
+        <p id="isp">Google LLC</p>
+      </div>
+    </div>
+
+  </main>
+  <div id="mapid"></div>
+
+
+
+  <div class="attribution">
+    Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>.
+    Coded by <a href="https://twitter.com/DoshiDevarshi">Devarshi Doshi</a>.
+  </div>
+  <script>
+    searchIp();
+
+    function searchIp() {
+      let ip = "";
+      const inputValue = document.getElementById("ip").value;
+      if (inputValue === "") {
+        document.getElementById("ip").value = "49.36.65.222";
+        ip = "49.36.65.222";
+      } else {
+        ip = document.getElementById("ip").value;
+      }
+
+      const api_key = "at_VBufZbZxQdHMA4S2638dvdMojcFwo";
+      $(function () {
+        $.ajax({
+          url: "https://geo.ipify.org/api/v1",
+          dataType: "json",
+          data: { apiKey: api_key, ipAddress: ip },
+          success: function (data) {
+            const { ip, location, isp } = data;
+            const { lat, lng } = location;
+            setValuesOnScreen(ip, location, isp);
+            renderOnMap(lat, lng);
+          },
+        });
+      });
+    }
+
+    function setValuesOnScreen(ip, location, isp) {
+      console.log({ ip, location, isp });
+      document.getElementById("address").innerHTML = ip;
+      document.getElementById(
+        "location"
+      ).innerHTML = `${location.city}, ${location.country} ${location.postalCode}, ${location.region}`;
+      document.getElementById("timezone").innerHTML = 'UTC ' + location.timezone;
+      document.getElementById("isp").innerHTML = isp;
+    }
+
+    function renderOnMap(lat, lng) {
+      var container = L.DomUtil.get("mapid");
+      if (container != null) {
+        container._leaflet_id = null;
+      } 
+      const map = L.map("mapid", { minZoom: 18, maxZoom: 18 });
+      map.setView([lat, lng], 13);
+      disableMapInteractions(map);
+
+      // Layer
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+   
+      }).addTo(map);
+
+
+      // Ícone
+      const marker = L.icon({
+        iconUrl: "images/icon-location.svg",
+        iconSize: [46, 56], // size of the icon
+        iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+        shadowAnchor: [4, 62], // the same for the shadow
+        popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
+      });
+      L.marker([lat, lng], { icon: marker }).addTo(map).openPopup();
+    }
+
+    function disableMapInteractions(map) {
+      map.dragging.disable();
+      map.touchZoom.disable();
+      map.doubleClickZoom.disable();
+      map.scrollWheelZoom.disable();
+      map.boxZoom.disable();
+      map.keyboard.disable();
+      if (map.tap) map.tap.disable();
+      document.getElementById("mapid").style.cursor = "default";
+    }
+
+  </script>
+</body>
+
+</html>
