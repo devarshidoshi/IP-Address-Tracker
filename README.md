@@ -2,5 +2,5 @@
 
 ## Welcome! 👋
 
-Completed Challenge By Frontend Mentor of Ip Address Tracker More coming Soon!
+Completed Challenge Of Frontend Mentor of Ip Address Tracker More coming Soon!
 
